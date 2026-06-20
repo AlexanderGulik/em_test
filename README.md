@@ -150,6 +150,3 @@ docs/                     # Swagger документация
 - Docker, Docker Compose
 - Swagger (OpenAPI 2.0)
 
-docker-compose logs -f       # просмотр логов
-```
-```
