@@ -13,6 +13,7 @@ docker-compose up --build
 Swagger: `http://localhost:8080/swagger/`
 
 ## API Endpoints
+![Uploading image.png…]()
 
 ### POST /created-sub
 Создать подписку
