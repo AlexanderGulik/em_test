@@ -8,6 +8,17 @@ import (
 	"time"
 )
 
+// CreateSub создает новую подписку
+// @Summary      Создать подписку
+// @Description  Создает новую подписку с указанными параметрами
+// @Tags         Subscriptions
+// @Accept       json
+// @Produce      json
+// @Param        request body dto.SubRequest true "Данные для создания подписки"
+// @Success      201 "Подписка успешно создана"
+// @Failure      400 "Ошибка валидации данных"
+// @Failure      500 "Внутренняя ошибка сервера"
+// @Router       /created-sub [post]
 func (c *SubController) CreateSub(w http.ResponseWriter, r *http.Request){
 
 	var req dto.SubRequest

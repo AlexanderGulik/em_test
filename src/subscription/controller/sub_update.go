@@ -9,6 +9,19 @@ import (
 	"strings"
 )
 
+// UpdateSubFull полностью обновляет подписку
+// @Summary      Полное обновление подписки
+// @Description  Заменяет все поля подписки по указанному ID
+// @Tags         Subscriptions
+// @Accept       json
+// @Produce      json
+// @Param        id path int true "ID подписки"
+// @Param        request body dto.SubRequest true "Новые данные подписки"
+// @Success      200 "Подписка успешно обновлена"
+// @Failure      400 "Ошибка валидации данных"
+// @Failure      404 "Подписка не найдена"
+// @Failure      500 "Ошибка обновления"
+// @Router       /update-sub/{id} [put]
 func (c *SubController) UpdateSubFull(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr) 
@@ -38,6 +51,19 @@ func (c *SubController) UpdateSubFull(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// UpdateSubPartial частично обновляет подписку
+// @Summary      Частичное обновление подписки
+// @Description  Обновляет только указанные поля подписки
+// @Tags         Subscriptions
+// @Accept       json
+// @Produce      json
+// @Param        id path int true "ID подписки"
+// @Param        request body dto.SubUpdateRequest true "Поля для обновления"
+// @Success      200 "Подписка обновлена"
+// @Failure      400 "Ошибка валидации или все поля пустые"
+// @Failure      404 "Подписка не найдена"
+// @Failure      500 "Ошибка обновления"
+// @Router       /update-sub/{id} [patch]
 func (c *SubController) UpdateSubPartial(w http.ResponseWriter, r * http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)

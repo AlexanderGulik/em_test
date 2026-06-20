@@ -1,0 +1,340 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API для управления подписками",
+        "title": "Subscription API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/created-sub": {
+            "post": {
+                "description": "Создает новую подписку с указанными параметрами",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Создать подписку",
+                "parameters": [
+                    {
+                        "description": "Данные для создания подписки",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SubRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Подписка успешно создана"
+                    },
+                    "400": {
+                        "description": "Ошибка валидации данных"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера"
+                    }
+                }
+            }
+        },
+        "/delete-sub/{id}": {
+            "delete": {
+                "description": "Удаляет подписку по указанному ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Удалить подписку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID подписки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Подписка успешно удалена"
+                    },
+                    "400": {
+                        "description": "Неверный формат ID"
+                    },
+                    "500": {
+                        "description": "Ошибка удаления"
+                    }
+                }
+            }
+        },
+        "/get-sub": {
+            "get": {
+                "description": "Возвращает список всех подписок",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Получить все подписки",
+                "responses": {
+                    "200": {
+                        "description": "Список подписок",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.SubRequest"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Ошибка получения данных"
+                    }
+                }
+            }
+        },
+        "/get-sub-sum": {
+            "get": {
+                "description": "Рассчитывает общую стоимость подписок по заданным фильтрам",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Получить сумму подписок",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UUID пользователя",
+                        "name": "user_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Название сервиса",
+                        "name": "service_name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "example": "05-2026",
+                        "description": "Начальная дата в формате MM-YYYY",
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "example": "08-2026",
+                        "description": "Конечная дата в формате MM-YYYY",
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сумма подписок"
+                    },
+                    "400": {
+                        "description": "Отсутствуют обязательные параметры"
+                    },
+                    "500": {
+                        "description": "Ошибка получения суммы"
+                    }
+                }
+            }
+        },
+        "/get-sub/{id}": {
+            "get": {
+                "description": "Возвращает данные подписки по указанному идентификатору",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Получить подписку по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID подписки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Данные подписки",
+                        "schema": {
+                            "$ref": "#/definitions/dto.SubRequest"
+                        }
+                    },
+                    "400": {
+                        "description": "Неверный формат ID"
+                    },
+                    "404": {
+                        "description": "Подписка не найдена"
+                    }
+                }
+            }
+        },
+        "/update-sub/{id}": {
+            "put": {
+                "description": "Заменяет все поля подписки по указанному ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Полное обновление подписки",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID подписки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Новые данные подписки",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SubRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Подписка успешно обновлена"
+                    },
+                    "400": {
+                        "description": "Ошибка валидации данных"
+                    },
+                    "404": {
+                        "description": "Подписка не найдена"
+                    },
+                    "500": {
+                        "description": "Ошибка обновления"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Обновляет только указанные поля подписки",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "summary": "Частичное обновление подписки",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID подписки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Поля для обновления",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SubUpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Подписка обновлена"
+                    },
+                    "400": {
+                        "description": "Ошибка валидации или все поля пустые"
+                    },
+                    "404": {
+                        "description": "Подписка не найдена"
+                    },
+                    "500": {
+                        "description": "Ошибка обновления"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.SubRequest": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string",
+                    "example": "06-2026"
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 1000
+                },
+                "service_name": {
+                    "type": "string",
+                    "example": "Netflix"
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "05-2026"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "d2f6cf95-ea12-4d74-b7fb-4215c94475a7"
+                }
+            }
+        },
+        "dto.SubUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string",
+                    "example": "06-2026"
+                },
+                "price": {
+                    "type": "integer",
+                    "example": 1400
+                },
+                "service_name": {
+                    "type": "string",
+                    "example": "Netflix"
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "05-2026"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "d2f6cf95-ea12-4d74-b7fb-4215c94475a7"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,228 @@
+basePath: /
+definitions:
+  dto.SubRequest:
+    properties:
+      end_date:
+        example: 06-2026
+        type: string
+      price:
+        example: 1000
+        type: integer
+      service_name:
+        example: Netflix
+        type: string
+      start_date:
+        example: 05-2026
+        type: string
+      user_id:
+        example: d2f6cf95-ea12-4d74-b7fb-4215c94475a7
+        type: string
+    type: object
+  dto.SubUpdateRequest:
+    properties:
+      end_date:
+        example: 06-2026
+        type: string
+      price:
+        example: 1400
+        type: integer
+      service_name:
+        example: Netflix
+        type: string
+      start_date:
+        example: 05-2026
+        type: string
+      user_id:
+        example: d2f6cf95-ea12-4d74-b7fb-4215c94475a7
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для управления подписками
+  title: Subscription API
+  version: "1.0"
+paths:
+  /created-sub:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую подписку с указанными параметрами
+      parameters:
+      - description: Данные для создания подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Подписка успешно создана
+        "400":
+          description: Ошибка валидации данных
+        "500":
+          description: Внутренняя ошибка сервера
+      summary: Создать подписку
+      tags:
+      - Subscriptions
+  /delete-sub/{id}:
+    delete:
+      description: Удаляет подписку по указанному ID
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Подписка успешно удалена
+        "400":
+          description: Неверный формат ID
+        "500":
+          description: Ошибка удаления
+      summary: Удалить подписку
+      tags:
+      - Subscriptions
+  /get-sub:
+    get:
+      description: Возвращает список всех подписок
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Список подписок
+          schema:
+            items:
+              $ref: '#/definitions/dto.SubRequest'
+            type: array
+        "500":
+          description: Ошибка получения данных
+      summary: Получить все подписки
+      tags:
+      - Subscriptions
+  /get-sub-sum:
+    get:
+      description: Рассчитывает общую стоимость подписок по заданным фильтрам
+      parameters:
+      - description: UUID пользователя
+        in: query
+        name: user_id
+        type: string
+      - description: Название сервиса
+        in: query
+        name: service_name
+        type: string
+      - description: Начальная дата в формате MM-YYYY
+        example: 05-2026
+        in: query
+        name: start_date
+        required: true
+        type: string
+      - description: Конечная дата в формате MM-YYYY
+        example: 08-2026
+        in: query
+        name: end_date
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сумма подписок
+        "400":
+          description: Отсутствуют обязательные параметры
+        "500":
+          description: Ошибка получения суммы
+      summary: Получить сумму подписок
+      tags:
+      - Subscriptions
+  /get-sub/{id}:
+    get:
+      description: Возвращает данные подписки по указанному идентификатору
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Данные подписки
+          schema:
+            $ref: '#/definitions/dto.SubRequest'
+        "400":
+          description: Неверный формат ID
+        "404":
+          description: Подписка не найдена
+      summary: Получить подписку по ID
+      tags:
+      - Subscriptions
+  /update-sub/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет только указанные поля подписки
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Поля для обновления
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Подписка обновлена
+        "400":
+          description: Ошибка валидации или все поля пустые
+        "404":
+          description: Подписка не найдена
+        "500":
+          description: Ошибка обновления
+      summary: Частичное обновление подписки
+      tags:
+      - Subscriptions
+    put:
+      consumes:
+      - application/json
+      description: Заменяет все поля подписки по указанному ID
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Новые данные подписки
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Подписка успешно обновлена
+        "400":
+          description: Ошибка валидации данных
+        "404":
+          description: Подписка не найдена
+        "500":
+          description: Ошибка обновления
+      summary: Полное обновление подписки
+      tags:
+      - Subscriptions
+swagger: "2.0"

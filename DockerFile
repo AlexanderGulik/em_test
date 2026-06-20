@@ -20,6 +20,7 @@ RUN mkdir -p /app/src/logs
 
 COPY --from=builder /app/server .
 COPY --from=builder /app/migrations ./migrations
+COPY --from=builder /app/docs ./docs  
 COPY .env ./
 EXPOSE 8080
 

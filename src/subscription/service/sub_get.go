@@ -8,8 +8,8 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func (s * SubService) GetSubId(id int) (dto.SubRequest, error) {
-	var res dto.SubRequest
+func (s * SubService) GetSubId(id int) (dto.SubResponse, error) {
+	var res dto.SubResponse
 	 err :=	 config.DB.Get(&res, `
     SELECT id_sub, service_name, price_month, user_uuid, start_date, end_date 
     FROM subscriptions 
@@ -23,8 +23,8 @@ func (s * SubService) GetSubId(id int) (dto.SubRequest, error) {
 	return res, nil
 }
 
-func (s *SubService) SelectSubAll() ([]dto.SubRequest, error) {
-	var res []dto.SubRequest
+func (s *SubService) SelectSubAll() ([]dto.SubResponse, error) {
+	var res []dto.SubResponse
 	err := config.DB.Select(&res, ` SELECT id_sub, service_name, price_month, user_uuid, start_date, end_date 
     FROM subscriptions 
 		`)
