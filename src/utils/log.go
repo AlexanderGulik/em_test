@@ -1,28 +1,38 @@
 package utils
 
 import (
-    "fmt"
-    "os"
-    "time"
+	"bufio"
+	"fmt"
+	"os"
+	"sync"
+	"time"
 )
 
-var logFile *os.File
+var (
+		logWriter *bufio.Writer
+		logMutex sync.Mutex
+	)
 
 func InitLogFile() error {
 
 	logPath := "src/logs/errors.log"
-    var err error
-    logFile, err = os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(logPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return  err
+	}
+	logWriter = bufio.NewWriter(file)
     return err
 }
 
 func LogError(err error) {
-    if err == nil || logFile == nil {
+    if err == nil || logWriter == nil {
         return
     }
 
-    timestamp := time.Now().Format("2006-01-02 15:04:05")
-    logEntry := fmt.Sprintf("[%s] %v\n", timestamp, err)
+    logMutex.Lock()
+    defer logMutex.Unlock()
     
-    logFile.WriteString(logEntry)
+    timestamp := time.Now().Format("2006-01-02 15:04:05")
+    fmt.Fprintf(logWriter, "[%s] %v\n", timestamp, err)
+		logWriter.Flush()
 }

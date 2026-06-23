@@ -158,7 +158,7 @@ paths:
           schema:
             $ref: '#/definitions/dto.SubRequest'
         "400":
-          description: Неверный формат ID
+          description: Неверный формат
         "404":
           description: Подписка не найдена
       summary: Получить подписку по ID

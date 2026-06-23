@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"encoding/json"
 	"em_test/src/utils"
+	"strings"
 )
 
 // DeleteSub удаляет подписку по ID
@@ -32,7 +33,10 @@ func (c *SubController) DeleteSub(w http.ResponseWriter, r *http.Request) {
 	err = c.service.DeleteSubId(intSubId)
 
 	if err != nil {
-
+	if strings.Contains(err.Error(), "не найдена") {
+            http.Error(w, `{"error": "Подписка не найдена"}`, http.StatusNotFound)
+            return
+        }
 		utils.LogError(err)
 		fmt.Println("Ошибка удаления подписки", http.StatusInternalServerError)
 		return

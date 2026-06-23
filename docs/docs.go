@@ -190,7 +190,7 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Неверный формат ID"
+                        "description": "Неверный формат"
                     },
                     "404": {
                         "description": "Подписка не найдена"

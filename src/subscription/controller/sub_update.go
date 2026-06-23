@@ -40,6 +40,11 @@ func (c *SubController) UpdateSubFull(w http.ResponseWriter, r *http.Request) {
 	err = c.service.UpdateSubFull(id, req)
 
 	if err != nil {
+		if strings.Contains(err.Error(),"не найдена") {
+			fmt.Println("Подписка не найдена", id)
+			http.Error(w,`{"error": "Подписка не найдена"}`, http.StatusNotFound)
+			return
+		}
 		fmt.Println("Ошибка обновления данных", err)
 
 		utils.LogError(err)
@@ -99,7 +104,7 @@ func (c *SubController) UpdateSubPartial(w http.ResponseWriter, r * http.Request
         return
 			}
 
-	w.Header().Set("Content-Type", "appliaction/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
   "status":  "success", "message": "Подписка обновлена",

@@ -13,6 +13,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
+	"context"
 
 	"github.com/joho/godotenv"
 )
@@ -38,11 +42,33 @@ func main() {
 	fs := http.FileServer(http.Dir("docs"))
 	mux.Handle("GET /swagger/", http.StripPrefix("/swagger", fs))
 
+	server := &http.Server{Addr: ":8080", Handler: mux}
+
+	go func() {
+
 	fmt.Println("Сервер запущен на :8080")
 	fmt.Println("Swagger UI: http://localhost:8080/swagger/index.html")
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		utils.LogError(err)
 		log.Fatal("Ошибка запуска сервера:", err)
 	}
+}()
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
+
+
+	<-stop
+	fmt.Println("\nОстановка сервера...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+		if err := server.Shutdown(ctx); err != nil {
+		utils.LogError(err)
+		fmt.Println("Ошибка при остановке:", err)
+	}
+
+	fmt.Println("Сервер остановлен")
+
 }

@@ -34,17 +34,21 @@ func (c *SubController) CreateSub(w http.ResponseWriter, r *http.Request){
 
 	}
 	
-	 err := c.service.CreateSub(req);
+	 id, err := c.service.CreateSub(req);
 	if err != nil {
 		fmt.Printf("Ошибка создания: %v", err)
 		utils.LogError(err)
 		http.Error(w, `{"error": "Ошибка сохранения"}`, http.StatusInternalServerError)
 		return
 	}
-
+  response := dto.CreateSubscriptionResponse{
+        Status:  "success",
+        Message: "Подписка успешно добавлена.",
+        ID:      id,
+    }
 	w.WriteHeader(http.StatusCreated)
 	fmt.Println("Успешно добавлена новая подписка")
-	json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Подписка успешно добавлена."})
+	json.NewEncoder(w).Encode(response)
 
 }
 

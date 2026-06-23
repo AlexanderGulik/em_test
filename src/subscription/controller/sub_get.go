@@ -2,11 +2,12 @@ package controller
 
 import (
 	"em_test/src/subscription/dto"
+	"em_test/src/utils"
 	"encoding/json"
 	"fmt"
-	"em_test/src/utils"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // GetSubId возвращает подписку по ID
@@ -16,7 +17,7 @@ import (
 // @Produce      json
 // @Param        id path int true "ID подписки"
 // @Success      200 {object} dto.SubRequest "Данные подписки"
-// @Failure      400 "Неверный формат ID"
+// @Failure      400 "Неверный формат"
 // @Failure      404 "Подписка не найдена"
 // @Router       /get-sub/{id} [get]
 func (c *SubController) GetSubId(w http.ResponseWriter, r *http.Request) {
@@ -97,6 +98,11 @@ func (c *SubController) SelectGetSumSub(w http.ResponseWriter, r *http.Request) 
 	cost, err := c.service.TotalGetSum(filter)
 
 	if err != nil {
+
+		if strings.Contains(err.Error(), "формат даты") {
+			http.Error(w, fmt.Sprintf(`{"error": "Неверный формат запроса: %s"}`, err.Error()), http.StatusBadRequest)
+			return
+		}
 		fmt.Println("Ошибка получения суммы подписок", err)
 		
 		utils.LogError(err)
